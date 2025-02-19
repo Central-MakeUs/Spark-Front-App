@@ -1,4 +1,6 @@
 import { WebView } from "react-native-webview";
+import * as MediaLibrary from "expo-media-library";
+import * as FileSystem from "expo-file-system";
 import {
   SafeAreaProvider,
   SafeAreaView,
@@ -21,8 +23,14 @@ import Constants from "expo-constants";
 
 export default function RootLayout() {
   SplashScreen.hideAsync();
+  const [status, requestPermission] = MediaLibrary.usePermissions();
   const [loading, setLoading] = useState(true);
   const webViewRef = useRef<WebView>(null);
+  const imageRef = useRef<View>(null);
+
+  if (status === null) {
+    requestPermission();
+  }
 
   const onAndroidBackPress = () => {
     if (webViewRef.current) {
@@ -44,18 +52,47 @@ export default function RootLayout() {
     }
   }, []);
 
+  const onSaveImageAsync = async (imgData) => {
+    const base64Code = imgData.split("data:image/png;base64,")[1];
+    console.log(FileSystem.documentDirectory);
+    const filename =
+      FileSystem.documentDirectory + "spark_strategy_screenshot.png";
+    try {
+      await FileSystem.writeAsStringAsync(filename, base64Code, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      await MediaLibrary.createAssetAsync(filename); // 이미지를 미디어 라이브러리에 저장
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onMessage = async (event) => {
+    try {
+      const message = JSON.parse(event.nativeEvent.data);
+      console.log(message.type);
+      if (message.type === "screenshot") {
+        const imgData = message.data;
+        await onSaveImageAsync(imgData);
+        console.log("is it successful");
+      }
+    } catch (error) {
+      console.error("Error parsing message:", error);
+    }
+  };
+
   return loading ? (
     <>
       <Splash setFinisehd={() => setLoading(false)} />
     </>
   ) : (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <View style={styles.container}>
+      <View style={styles.container} ref={imageRef}>
         <StatusBar barStyle={"default"} animated={true} />
         <WebView
           ref={webViewRef}
           source={{
-            uri: "https://www.app-spark.shop/result",
+            uri: "http://192.168.45.205:5173/strategy",
           }}
           javaScriptEnabled
           bounces
@@ -63,6 +100,7 @@ export default function RootLayout() {
           mixedContentMode={"always"}
           allowsBackForwardNavigationGestures
           cacheEnabled={false}
+          onMessage={onMessage}
           onContentProcessDidTerminate={(syntheticEvent) => {
             const { nativeEvent } = syntheticEvent;
             console.warn("Content process terminated, reloading", nativeEvent);
