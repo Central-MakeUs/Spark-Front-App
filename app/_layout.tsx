@@ -92,7 +92,7 @@ export default function RootLayout() {
         <WebView
           ref={webViewRef}
           source={{
-            uri: "http://192.168.45.205:5173/strategy",
+            uri: "spark 또는 localhost",
           }}
           javaScriptEnabled
           bounces
