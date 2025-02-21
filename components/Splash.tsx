@@ -1,5 +1,5 @@
 import LottieView from "lottie-react-native";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 
 export default function Splash({ setFinisehd }) {
   return (
@@ -8,7 +8,7 @@ export default function Splash({ setFinisehd }) {
         onAnimationFinish={() => {
           setFinisehd();
         }}
-        source={require("../assets/splash/Splash.json")}
+        source={require("../assets/splash/splash.json")}
         style={{ width: "100%", height: "100%" }}
         autoPlay={true}
         loop={false}
