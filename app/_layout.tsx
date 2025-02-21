@@ -19,8 +19,6 @@ import { useEffect, useRef, useState } from "react";
 import "react-native-reanimated";
 import Constants from "expo-constants";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-
 export default function RootLayout() {
   SplashScreen.hideAsync();
   const [status, requestPermission] = MediaLibrary.usePermissions();
@@ -52,7 +50,7 @@ export default function RootLayout() {
     }
   }, []);
 
-  const onSaveImageAsync = async (imgData) => {
+  const onSaveImageAsync = async (imgData: any) => {
     const base64Code = imgData.split("data:image/png;base64,")[1];
     console.log(FileSystem.documentDirectory);
     const filename =
@@ -67,7 +65,7 @@ export default function RootLayout() {
     }
   };
 
-  const onMessage = async (event) => {
+  const onMessage = async (event: any) => {
     try {
       const message = JSON.parse(event.nativeEvent.data);
       console.log(message.type);
@@ -92,7 +90,7 @@ export default function RootLayout() {
         <WebView
           ref={webViewRef}
           source={{
-            uri: "spark 또는 localhost",
+            uri: "https://www.app-spark.shop",
           }}
           javaScriptEnabled
           bounces
@@ -101,6 +99,7 @@ export default function RootLayout() {
           allowsBackForwardNavigationGestures
           cacheEnabled={false}
           onMessage={onMessage}
+          userAgent={"SparkAgent"}
           onContentProcessDidTerminate={(syntheticEvent) => {
             const { nativeEvent } = syntheticEvent;
             console.warn("Content process terminated, reloading", nativeEvent);

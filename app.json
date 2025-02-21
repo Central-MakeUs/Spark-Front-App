@@ -17,7 +17,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.sparkapp"
     },
     "web": {
       "bundler": "metro",
@@ -29,7 +30,9 @@
         "expo-custom-assets",
         {
           "assetsDirName": "/assets/splash",
-          "assetsPaths": ["./assets/splash"]
+          "assetsPaths": [
+            "./assets/splash"
+          ]
         }
       ],
       "expo-router",
