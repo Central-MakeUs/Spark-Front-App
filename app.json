@@ -1,17 +1,19 @@
 {
   "expo": {
     "name": "spark-app",
-    "slug": "spark-app",
+    "slug": "spark",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "spark",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.spark.creators"
     },
     "android": {
+      "package": "com.spark.creators",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -43,6 +45,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "723bc70b-ff9b-4b9a-b6f0-5bfd753f24b1"
+      }
+    },
+    "owner": "kim_junug_ho"
   }
 }
