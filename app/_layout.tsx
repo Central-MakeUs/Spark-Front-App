@@ -1,6 +1,7 @@
 import { WebView } from "react-native-webview";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
+import * as WebBrowser from "expo-web-browser";
 import {
   SafeAreaProvider,
   SafeAreaView,
@@ -21,10 +22,12 @@ import Constants from "expo-constants";
 
 export default function RootLayout() {
   SplashScreen.hideAsync();
+  const [currentUrl, setCurrentUrl] = useState("https://example.com");
   const [status, requestPermission] = MediaLibrary.usePermissions();
   const [loading, setLoading] = useState(true);
   const webViewRef = useRef<WebView>(null);
   const imageRef = useRef<View>(null);
+  const previousUrlRef = useRef("");
 
   if (status === null) {
     requestPermission();
@@ -65,6 +68,10 @@ export default function RootLayout() {
     }
   };
 
+  const handleNavigationStateChange = (navState: any) => {
+    setCurrentUrl(navState.url); // 현재 URL을 상태로 업데이트
+  };
+
   const onMessage = async (event: any) => {
     try {
       const message = JSON.parse(event.nativeEvent.data);
@@ -72,7 +79,9 @@ export default function RootLayout() {
       if (message.type === "screenshot") {
         const imgData = message.data;
         await onSaveImageAsync(imgData);
-        console.log("is it successful");
+      } else if (message.type === "external_url") {
+        previousUrlRef.current = currentUrl;
+        await WebBrowser.openBrowserAsync(message.url);
       }
     } catch (error) {
       console.error("Error parsing message:", error);
@@ -89,9 +98,12 @@ export default function RootLayout() {
         <StatusBar barStyle={"default"} animated={true} />
         <WebView
           ref={webViewRef}
+          onNavigationStateChange={handleNavigationStateChange}
           source={{
-            uri: "https://www.app-spark.shop",
+            uri: "https://www.app-spark.shop/",
           }}
+          allowsInlineMediaPlayback
+          mediaPlaybackRequiresUserAction={false}
           javaScriptEnabled
           bounces
           scrollEnabled
