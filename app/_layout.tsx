@@ -100,7 +100,7 @@ export default function RootLayout() {
           ref={webViewRef}
           onNavigationStateChange={handleNavigationStateChange}
           source={{
-            uri: "http://localhost:5173/",
+            uri: "https://www.app-spark.shop/",
           }}
           allowsInlineMediaPlayback
           mediaPlaybackRequiresUserAction={false}
