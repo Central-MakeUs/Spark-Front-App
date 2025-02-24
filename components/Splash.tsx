@@ -1,17 +1,18 @@
 import LottieView from "lottie-react-native";
 import { View, StyleSheet } from "react-native";
 
-export default function Splash({ setFinisehd }) {
+export default function Splash({ setFinished }: { setFinished: () => void }) {
   return (
     <View style={styles.container}>
       <LottieView
         onAnimationFinish={() => {
-          setFinisehd();
+          setFinished();
         }}
         source={require("../assets/splash/splash.json")}
-        style={{ width: "100%", height: "100%" }}
-        autoPlay={true}
+        style={styles.lottie}
+        autoPlay
         loop={false}
+        resizeMode="cover"
       />
     </View>
   );
@@ -19,9 +20,11 @@ export default function Splash({ setFinisehd }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
     flex: 1,
+  },
+  lottie: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
   },
 });

@@ -90,7 +90,7 @@ export default function RootLayout() {
 
   return loading ? (
     <>
-      <Splash setFinisehd={() => setLoading(false)} />
+      <Splash setFinished={() => setLoading(false)} />
     </>
   ) : (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
@@ -100,7 +100,7 @@ export default function RootLayout() {
           ref={webViewRef}
           onNavigationStateChange={handleNavigationStateChange}
           source={{
-            uri: "https://www.app-spark.shop/",
+            uri: "http://localhost:5173/",
           }}
           allowsInlineMediaPlayback
           mediaPlaybackRequiresUserAction={false}
