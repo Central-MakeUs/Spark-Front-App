@@ -16,7 +16,7 @@
       }
     },
     "android": {
-      "package": "com.spark.creators",
+      "package": "com.spark.sns.creators",
       "versionCode": 11,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo_192.png",
