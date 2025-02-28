@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.spark.creators",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -17,11 +17,15 @@
     },
     "android": {
       "package": "com.spark.sns.creators",
-      "versionCode": 11,
+      "versionCode": 14,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo_192.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "bundler": "metro",
