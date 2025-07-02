@@ -1,7 +1,5 @@
 import { WebView } from "react-native-webview";
 import * as MediaLibrary from "expo-media-library";
-import * as FileSystem from "expo-file-system";
-import * as WebBrowser from "expo-web-browser";
 import {
   SafeAreaProvider,
   SafeAreaView,
@@ -19,9 +17,11 @@ import {
 import { useEffect, useRef, useState } from "react";
 import "react-native-reanimated";
 import Constants from "expo-constants";
+import OnMessage from "./helper/OnMessage";
 
 export default function RootLayout() {
   SplashScreen.hideAsync();
+
   const [currentUrl, setCurrentUrl] = useState("https://example.com");
   const [status, requestPermission] = MediaLibrary.usePermissions();
   const [loading, setLoading] = useState(true);
@@ -53,39 +53,8 @@ export default function RootLayout() {
     }
   }, []);
 
-  const onSaveImageAsync = async (imgData: any) => {
-    const base64Code = imgData.split("data:image/png;base64,")[1];
-    console.log(FileSystem.documentDirectory);
-    const filename =
-      FileSystem.documentDirectory + "spark_strategy_screenshot.png";
-    try {
-      await FileSystem.writeAsStringAsync(filename, base64Code, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-      await MediaLibrary.createAssetAsync(filename); // 이미지를 미디어 라이브러리에 저장
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const handleNavigationStateChange = (navState: any) => {
     setCurrentUrl(navState.url); // 현재 URL을 상태로 업데이트
-  };
-
-  const onMessage = async (event: any) => {
-    try {
-      const message = JSON.parse(event.nativeEvent.data);
-      console.log(message.type);
-      if (message.type === "screenshot") {
-        const imgData = message.data;
-        await onSaveImageAsync(imgData);
-      } else if (message.type === "external_url") {
-        previousUrlRef.current = currentUrl;
-        await WebBrowser.openBrowserAsync(message.url);
-      }
-    } catch (error) {
-      console.error("Error parsing message:", error);
-    }
   };
 
   return loading ? (
@@ -100,7 +69,7 @@ export default function RootLayout() {
           ref={webViewRef}
           onNavigationStateChange={handleNavigationStateChange}
           source={{
-            uri: "https://www.app-spark.shop/",
+            uri: "http://192.168.45.104:5173/strategy",
           }}
           allowsInlineMediaPlayback
           mediaPlaybackRequiresUserAction={false}
@@ -110,7 +79,7 @@ export default function RootLayout() {
           mixedContentMode={"always"}
           allowsBackForwardNavigationGestures
           cacheEnabled={false}
-          onMessage={onMessage}
+          onMessage={OnMessage({ previousUrlRef, currentUrl })}
           userAgent={"SparkAgent"}
           onContentProcessDidTerminate={(syntheticEvent) => {
             const { nativeEvent } = syntheticEvent;
